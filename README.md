@@ -172,7 +172,7 @@ const map = L.map("map", { attributionControl: false }).setView(
 
 Добавление тайлов (плиток):
 const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
+maxZoom: 19,
 }).addTo(map);
 Загружает OpenStreetMap-плитки как подложку карты (по сути реально отображает тайлы благодаря Leaflet).
 
@@ -190,9 +190,9 @@ distance, time, instructions — информация о маршруте.
 Иконка маркера:
 
 const markerIcon = new L.DivIcon({
-  className: "marker",
-  html: `<img src="marker.png" style="width:20px; height: 20px"/>`,
-  iconSize: [35, 35],
+className: "marker",
+html: `<img src="marker.png" style="width:20px; height: 20px"/>`,
+iconSize: [35, 35],
 });
 Создает кастомный маркер в виде иконки с marker.png (если хочешь поиграться - попробуй сменить).
 
@@ -200,36 +200,40 @@ const markerIcon = new L.DivIcon({
 map.on("click", onMapClick);
 
 function onMapClick(e) {
-  addMarker(e.latlng);
+addMarker(e.latlng);
 }
 Добавляет обработчик на клик по карте, вызывающий addMarker (отвечает за появление маркеров на мапе).
 
 Функция добавления маркера:
 function addMarker(latlng) {
-  if (routingControl) return; // Если уже построен маршрут — не добавлять
-  const marker = L.marker(latlng, { icon: markerIcon }).addTo(map);
-  map.panTo(marker.getLatLng()); // Центрировать карту на маркере
-  markers.push(marker);
+if (routingControl) return; // Если уже построен маршрут — не добавлять
+const marker = L.marker(latlng, { icon: markerIcon }).addTo(map);
+map.panTo(marker.getLatLng()); // Центрировать карту на маркере
+markers.push(marker);
 }
 Построение маршрута:
 function buildRoute() {
-  routingControl = L.Routing.control({
-    waypoints: markers.map((marker) => marker.getLatLng()),
-    routeWhileDragging: true,
-    createMarker: function () {
-      return null; // Не создавать стандартные маркеры
-    },
-    language: "ru",
-    lineOptions: {
-      styles: [{ color: "#5158bb", opacity: 1, weight: 5 }],
-    },
-  }).addTo(map);
+routingControl = L.Routing.control({
+waypoints: markers.map((marker) => marker.getLatLng()),
+routeWhileDragging: true,
+createMarker: function () {
+return null; // Не создавать стандартные маркеры
+},
+language: "ru",
+lineOptions: {
+styles: [{ color: "#5158bb", opacity: 1, weight: 5 }],
+},
+}).addTo(map);
 
   routingControl.on("routesfound", function (e) {
-    distance = e.routes[0].summary.totalDistance;
-    time = e.routes[0].summary.totalTime;
-    instructions = e.routes[0].instructions;
-  });
+
+  distance = e.routes[0].summary.totalDistance;
+
+  time = e.routes[0].summary.totalTime;
+
+  instructions = e.routes[0].instructions;
+
+});
 }
 Строит маршрут между маркерами.
 Сохраняет:
@@ -238,34 +242,34 @@ time — время в секундах.
 instructions — массив текстовых шагов маршрута.
 Получение последнего маркера (при нажатии когда формируешь маршрут):
 function getLastMarkerLocation() {
-  if (markers.length === 0) return null;
-  const latlng = markers[markers.length - 1].getLatLng();
-  return [latlng.lat, latlng.lng];
+if (markers.length === 0) return null;
+const latlng = markers[markers.length - 1].getLatLng();
+return [latlng.lat, latlng.lng];
 }
 Получение JSON-информации о маршруте:
 function getRouteInfo() {
-  return JSON.stringify({
-    distance,
-    time,
-    instructions,
-  });
+return JSON.stringify({
+distance,
+time,
+instructions,
+});
 }
 Удаление маршрута:
 function removeRouting() {
-  if (routingControl) {
-    map.removeControl(routingControl);
-    routingControl = undefined;
-    distance = 0;
-    time = 0;
-    instructions = undefined;
-  }
+if (routingControl) {
+map.removeControl(routingControl);
+routingControl = undefined;
+distance = 0;
+time = 0;
+instructions = undefined;
+}
 }
 Удаление всех маркеров:
 function removeAllMarkers() {
-  for (i = 0; i < markers.length; i++) {
-    map.removeLayer(markers[i]);
-  }
-  markers = [];
+for (i = 0; i < markers.length; i++) {
+map.removeLayer(markers[i]);
+}
+markers = [];
 }
 
 # НОВЫЕ КАРТЫ В ПАРЕ С Yandex API
@@ -274,32 +278,47 @@ function removeAllMarkers() {
 
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Карта Яндекс для 1С</title>
+      <head>
+<meta charset="utf-8">
+            <title>Карта Яндекс для 1С</title>
 
-Установка кодировки и заголовка страницы.
+ Установка кодировки и заголовка страницы.
 
   <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 Подключаем Яндекс.Карты JS API версии 2.1 на русском языке.
 
   <style>
-    html, body, #map {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-    #controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 1000;
-      background: white;
-      padding: 5px;
-      border-radius: 5px;
+
+        html, body, #map {
+
+              margin: 0;
+
+              padding: 0;
+
+              width: 100%;
+
+              height: 100%;
+
+              overflow: hidden;
+
+        }
+
+        #controls {
+
+              position: absolute;
+
+              top: 10px;
+
+              left: 10px;
+
+              z-index: 1000;
+
+              background: white;
+
+              padding: 5px;
+
+              border-radius: 5px;
     }
   </style>
 
@@ -307,11 +326,13 @@ function removeAllMarkers() {
 Панель с кнопками (#controls) — поверх карты, закреплена в левом верхнем углу.
 
 <body>
-  <div id="controls">
-    <button onclick="downloadPlacemarks()">💾 Сохранить точки</button>
-    <input type="file" id="fileInput" accept=".json" onchange="loadPlacemarks()" />
-  </div>
-  <div id="map"></div>
+      <div id="controls">
+
+<button onclick="downloadPlacemarks()">Сохранить точки</button>
+
+<input type="file" id="fileInput" accept=".json" onchange="loadPlacemarks()" />
+</div>
+<div id="map"></div>
 
 Интерфейс управления:
 
@@ -321,14 +342,16 @@ function removeAllMarkers() {
 Ниже — контейнер под карту с id="map".
 
   <script>
-    let map, placemarks = [];
 
-Объявляем переменные:
+        let map, placemarks = [];
 
-map — объект карты
-placemarks — массив меток, которые мы добавим
-    ymaps.ready(function () {
-Ожидаем, пока Яндекс.Карты полностью загрузятся.
+        Объявляем переменные:
+
+        map — объект карты
+              placemarks — массив меток, которые мы добавим
+
+        ymaps.ready(function () {
+              Ожидаем, пока Яндекс.Карты полностью загрузятся.
 
       map = new ymaps.Map("map", {
         center: [55.76, 37.64],
@@ -336,10 +359,10 @@ placemarks — массив меток, которые мы добавим
         controls: ["zoomControl"]
       });
 
-Создаём карту внутри контейнера #map
+              Создаём карту внутри контейнера #map
 
-Центр: Москва
-Зум: 10
+              Центр: Москва
+              Зум: 10
 
 Добавляем панель масштабирования
       // Загрузка из localStorage
@@ -386,18 +409,20 @@ placemarks — массив меток, которые мы добавим
 coords — координаты точки
 label — подпись, отображается в балуне
 Стиль: красная точка, нельзя перетаскивать
-      // ПКМ по метке — удалить
-      placemark.events.add('contextmenu', function () {
-        map.geoObjects.remove(placemark);
-        placemarks = placemarks.filter(p => p !== placemark);
-        savePlacemarks();
-      });
+          // ПКМ по метке — удалить
+          placemark.events.add('contextmenu', function () {
+      map.geoObjects.remove(placemark);
+                placemarks = placemarks.filter(p => p !== placemark);
+      
+                savePlacemarks();
 
-Если нажали ПКМ по метке:
+          });
 
-Удаляем её с карты
-Убираем из массива
-Обновляем сохранение
+          Если нажали ПКМ по метке:
+
+          Удаляем её с карты
+                Убираем из массива
+            Обновляем сохранение
       map.geoObjects.add(placemark);
       placemarks.push(placemark);
     }
@@ -411,11 +436,12 @@ label — подпись, отображается в балуне
       localStorage.setItem("placemarks", JSON.stringify(data));
     }
 
-🔹 Сохраняем все метки в localStorage:
+        🔹 Сохраняем все метки в localStorage:
 
-Только координаты и подпись
-Сериализуем в JSON
-    function downloadPlacemarks() {
+        Только координаты и подпись
+		  Сериализуем в JSON
+
+	  function downloadPlacemarks() {
       const data = placemarks.map(pm => ({
         coords: pm.geometry.getCoordinates(),
         label: pm.properties.get("balloonContent")
@@ -429,12 +455,12 @@ label — подпись, отображается в балуне
       URL.revokeObjectURL(url);
     }
 
-🔹 Сохраняем метки в .json файл:
+	  🔹 Сохраняем метки в .json файл:
 
-Формируем JSON
-Создаём Blob
-Имитируем клик по ссылке для скачивания
-Автоматически скачивается файл placemarks.json
+	  Формируем JSON
+		  Создаём Blob
+			  Имитируем клик по ссылке для скачивания
+				  Автоматически скачивается файл placemarks.json
     function loadPlacemarks() {
       const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
